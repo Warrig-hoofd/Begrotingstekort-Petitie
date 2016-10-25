@@ -1,25 +1,39 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+/**
+ * @property  foundings foundings model.
+ */
+class Welcome extends CI_Controller
+{
+    /**
+     * Welcome constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->model('model_foundings', 'foundings');
+    }
 
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/user_guide/general/urls.html
-	 */
-	public function index()
-	{
-		$this->load->view('welcome_message');
-	}
+    /**
+     * Get the frontpage for the petition.
+     *
+     * @url    GET|HEAD: >/
+     * @return void
+     */
+    public function index()
+    {
+        $data['title'] = 'Index';
+
+        // Count foundings.
+        $data['count_lux_leaks']     = $this->foundings->count();
+        $data['count_swiss_leaks']   = $this->foundings->count();
+        $data['count_behama_leaks']  = $this->foundings->count();
+        $data['count_panama_papers'] = $this->foundings->count();
+        $data['count_vermogens_tax'] = $this->foundings->count();
+
+        $this->load->view('template/header', $data);
+        $this->load->view('template/navbar', $data);
+        $this->load->view('welcome', $data);
+        $this->load->view('template/footer');
+    }
 }
